@@ -1,0 +1,63 @@
+给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+
+
+
+上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 感谢 Marcos 贡献此图。
+
+示例:
+
+输入: [0,1,0,2,1,0,1,3,2,1,2,1]
+输出: 6
+
+
+--------------------------------------------------------------------------
+总体思路：
+双指针
+
+实现细节：
+可以不用先遍历一遍找到最高的那个柱子。直接从两边往中间靠，每次移动两边指针中指向较矮的那个指针，直到两指针相遇。
+--------------------------------------------------------------------------
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+    	if(height.size() == 0){
+    		return 0;
+    	}
+
+    	int maxH = height[0];
+    	int p = 0;
+    	int ans1 = height[0];
+        for(int i = 1;i < height.size();i++){
+        	ans1 += height[i];
+        	if(height[i] > maxH){
+        		maxH = height[i];
+        		p = i;
+        	}
+        }
+
+
+        int i = 0,j = 0;
+        int ans2 = maxH;
+        while(j <= p){
+        	if(height[j] != 0 && height[j]>=height[i]){
+        		ans2+= height[i]*(j-i);
+        		i = j;
+        	}
+        	j++;
+        }
+        j = height.size()-1;
+        i = j;
+        while(j >= p){
+        	if(height[j] != 0 && height[j]>=height[i]){
+        		ans2+= height[i]*(i-j);
+        		i = j;
+        	}
+        	j--;
+        }
+
+
+        return ans2 - ans1;
+
+    }
+};
